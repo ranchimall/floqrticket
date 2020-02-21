@@ -10949,11 +10949,12 @@
             }
             const projectCode = "2020_project_1"
             const branch = "branch1"
+            debugger;
 
             if( TEDxKanke.getAssignedInterns(projectCode, branch, taskNumber[venue])!=null && TEDxKanke.getAssignedInterns(projectCode, branch, taskNumber[venue]).includes(userfloID)){
                 console.log(`${userfloID} is already authorized`);
                 showMessege('error', `${userfloID} is already authorized`);
-                //document.getElementById('authorize_btn').click();
+                document.getElementById('back_button_admin').click();
             }
 
             
