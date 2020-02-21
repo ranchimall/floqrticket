@@ -4,1300 +4,1189 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="author" content="ZXing for JS"> 
-    <title>TEDxKanke Ticket QR Scanner</title>
+    <meta name="author" content="ZXing for JS">
+
+    <title>Admin QR Scanner</title>
     <!--<link rel="stylesheet" href="css/main.css">-->
-    <style>* {
-        -webkit-box-sizing: border-box;
-                box-sizing: border-box;
-        font-family: 'Roboto', sans-serif;
-      }
-      
-      :root {
-        --accent-color: #e62b1e;
-        --background:   34, 34, 34;
-        --foreground: #2a2a2a;
-        --rgb-bw: 255, 255, 255;
-        --light-text: #eee;
-        --light-color: #aaa;
-        --dark-color: #111;
-      }
-      
-      body {
-        margin: 0;
-        font-size: 16px;
-        background: rgba(var(--background), 1);
-        color: rgba(var(--rgb-bw), 1);
-        display: -ms-grid;
-        display: grid;
-        height: 100vh;
-      }
-      
-      h1, h2, h3, h4, h5 {
-        font-weight: 500;
-      }
-      
-      input[type="radio"] {
-        display: none;
-      }
-      
-      .video {
-        overflow: hidden;
-        position: relative;
-        z-index: 1;
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        width: 100%;
-      }
-      
-      .video::after {
-        content: '';
-        display: block;
-        padding-top: 100%;
-      }
-      
-      video {
-        width: 100%;
-        -o-object-fit: cover;
-           object-fit: cover;
-        -o-object-position: center;
-           object-position: center;
-        border: solid 1px rgba(var(--rgb-bw), 1);
-      }
-      
-      .checkbox {
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        -webkit-box-align: center;
+    <style>
+        * {
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        :root {
+            --accent-color: #e62b1e;
+            --background: 34, 34, 34;
+            --foreground: #2a2a2a;
+            --rgb-bw: 255, 255, 255;
+            --light-text: #eee;
+            --light-color: #aaa;
+            --dark-color: #111;
+        }
+
+        body {
+            margin: 0;
+            font-size: 16px;
+            background: rgba(var(--background), 1);
+            color: rgba(var(--rgb-bw), 1);
+            display: -ms-grid;
+            display: grid;
+            height: 100vh;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5 {
+            font-weight: 500;
+        }
+
+        input[type="radio"] {
+            display: none;
+        }
+
+        .video {
+            position: relative;
+            z-index: 1;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            line-height: 0;
+            width: 100%;
+        }
+
+        .video::after {
+            content: '';
+            display: block;
+            padding-top: 100%;
+        }
+
+        video {
+            width: 100%;
+            -o-object-fit: cover;
+            object-fit: cover;
+            -o-object-position: center;
+            object-position: center;
+            border: solid 1px rgba(var(--rgb-bw), 1);
+        }
+
+        .checkbox {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: center;
             -ms-flex-align: center;
-                align-items: center;
-        padding: 1rem 0;
-        margin: 0.5rem 0;
-      }
-      
-      .checkbox h4 {
-        margin: 0;
-      }
-      
-      .checkbox svg {
-        fill: none;
-        stroke: rgba(var(--rgb-bw), 0.8);
-        stroke-width: 6;
-        overflow: visible;
-        height: 1.6rem;
-        width: 1.6rem;
-        margin-right: 1rem;
-      }
-      
-      .checkbox svg .check {
-        stroke-dashoffset: 70;
-        stroke-dasharray: 70;
-        -webkit-transition: stroke-dashoffset 0.3s ease;
-        transition: stroke-dashoffset 0.3s ease;
-      }
-      
-      .checkbox input:checked + svg {
-        stroke: #00C853;
-      }
-      
-      .checkbox input:checked + svg .check {
-        stroke-dashoffset: 0;
-      }
-      
-      .checkbox input:disabled + svg,
-      .checkbox input:disabled + h4 {
-        opacity: 0.5;
-      }
-      
-      .container-card {
-        position: relative;
-        background: var(--foreground);
-        border-radius: 0.4rem;
-      }
-      
-      .popup-container {
-        display: -ms-grid;
-        display: grid;
-        position: fixed;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        place-items: center;
-        background: rgba(0, 0, 0, 0.24);
-        z-index: 10;
-        -webkit-transition: opacity 0.3s ease;
-        transition: opacity 0.3s ease;
-      }
-      
-      .popup-container .popup {
-        -ms-flex-item-align: end;
+            align-items: center;
+            padding: 1rem 0;
+            margin: 0.5rem 0;
+        }
+
+        .checkbox h4 {
+            margin: 0;
+        }
+
+        .checkbox svg {
+            fill: none;
+            stroke: rgba(var(--rgb-bw), 0.8);
+            stroke-width: 6;
+            overflow: visible;
+            height: 1.6rem;
+            width: 1.6rem;
+            margin-right: 1rem;
+        }
+
+        .checkbox svg .check {
+            stroke-dashoffset: 70;
+            stroke-dasharray: 70;
+            -webkit-transition: stroke-dashoffset 0.3s ease;
+            transition: stroke-dashoffset 0.3s ease;
+        }
+
+        .checkbox input:checked+svg {
+            stroke: #00C853;
+        }
+
+        .checkbox input:checked+svg .check {
+            stroke-dashoffset: 0;
+        }
+
+        .checkbox input:disabled+svg,
+        .checkbox input:disabled+h4 {
+            opacity: 0.5;
+        }
+
+        .container-card {
+            position: relative;
+            background: var(--foreground);
+            border-radius: 0.4rem;
+        }
+
+        .popup-container {
+            display: -ms-grid;
+            display: grid;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            place-items: center;
+            background: rgba(0, 0, 0, 0.24);
+            z-index: 10;
+            -webkit-transition: opacity 0.3s ease;
+            transition: opacity 0.3s ease;
+        }
+
+        .popup-container .popup {
+            -ms-flex-item-align: end;
             align-self: flex-end;
-        -ms-flex-wrap: wrap;
+            -ms-flex-wrap: wrap;
             flex-wrap: wrap;
-        width: 100%;
-        border-radius: 0.5rem 0.5rem 0 0;
-        padding: 1rem;
-        position: relative;
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        background: var(--foreground);
-        -webkit-transform: translateY(1rem);
-                transform: translateY(1rem);
-        -webkit-transition: -webkit-transform 0.3s ease;
-        transition: -webkit-transform 0.3s ease;
-        transition: transform 0.3s ease;
-        transition: transform 0.3s ease, -webkit-transform 0.3s ease;
-        -webkit-box-shadow: 0 2rem 2rem rgba(0, 0, 0, 0.24);
-                box-shadow: 0 2rem 2rem rgba(0, 0, 0, 0.24);
-      }
-      
-      .popup-container .popup h5 {
-        margin: 0.5rem 0;
-      }
-      
-      .popup-container .popup .container-header {
-        -webkit-box-align: center;
+            width: 100%;
+            border-radius: 0.5rem 0.5rem 0 0;
+            padding: 1rem;
+            position: relative;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            background: var(--foreground);
+            -webkit-transform: translateY(1rem);
+            transform: translateY(1rem);
+            -webkit-transition: -webkit-transform 0.3s ease;
+            transition: -webkit-transform 0.3s ease;
+            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, -webkit-transform 0.3s ease;
+            -webkit-box-shadow: 0 2rem 2rem rgba(0, 0, 0, 0.24);
+            box-shadow: 0 2rem 2rem rgba(0, 0, 0, 0.24);
+        }
+
+        .popup-container .popup h5 {
+            margin: 0.5rem 0;
+        }
+
+        .popup-container .popup .container-header {
+            -webkit-box-align: center;
             -ms-flex-align: center;
-                align-items: center;
-        padding: 0;
-      }
-      
-      .popup-container .popup .container-header button {
-        background: rgba(var(--rgb-bw), 0.1);
-        padding: 0.5rem 1rem 0.5rem 0.5rem;
-      }
-      
-      #settings_page {
-        padding: 1rem;
-      }
-      
-      #settings_page section {
-        width: 100%;
-        border-bottom: 1px solid rgba(var(--rgb-bw), 0.1);
-        display: -ms-grid;
-        display: grid;
-        padding-bottom: 1rem;
-      }
-      
-      #settings_page section:last-of-type {
-        border: none;
-      }
-      
-      #settings_page h3, #settings_page h4 {
-        display: flexbox;
-        width: 100%;
-        -ms-flex-item-align: center;
+            align-items: center;
+            padding: 0;
+        }
+
+        .popup-container .popup .container-header button {
+            background: rgba(var(--rgb-bw), 0.1);
+            padding: 0.5rem 1rem 0.5rem 0.5rem;
+        }
+
+        #settings_page {
+            padding: 1rem;
+        }
+
+        #settings_page section {
+            width: 100%;
+            border-bottom: 1px solid rgba(var(--rgb-bw), 0.1);
+            display: -ms-grid;
+            display: grid;
+            padding-bottom: 1rem;
+        }
+
+        #settings_page section:last-of-type {
+            border: none;
+        }
+
+        #settings_page h3,
+        #settings_page h4 {
+            display: flexbox;
+            width: 100%;
+            -ms-flex-item-align: center;
             align-self: center;
-      }
-      
-      #settings_page h5 {
-        margin: 0;
-        -ms-flex-item-align: center;
+        }
+
+        #settings_page h5 {
+            margin: 0;
+            -ms-flex-item-align: center;
             -ms-grid-row-align: center;
             align-self: center;
-        font-weight: normal;
-        opacity: 0.9;
-      }
-      
-      #settings_page button {
-        background: transparent;
-        border: 1px solid #D32F2F;
-        color: #D32F2F;
-        margin: 1rem 0;
-        width: -webkit-min-content;
-        width: -moz-min-content;
-        width: min-content;
-        white-space: nowrap;
-      }
-      
-      #settings_page button svg {
-        fill: none;
-        stroke: rgba(var(--rgb-bw), 0.8);
-        stroke-width: 6;
-        overflow: visible;
-        stroke: #D32F2F;
-      }
-      
-      #settings_page button:hover {
-        background: #D32F2F;
-        color: white;
-      }
-      
-      #settings_page button:hover svg {
-        stroke: white;
-      }
-      
-      #settings_page div {
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        width: 100%;
-        padding: 1rem 0;
-        -ms-flex-line-pack: center;
+            font-weight: normal;
+            opacity: 0.9;
+        }
+
+        #settings_page button {
+            background: transparent;
+            border: 1px solid #D32F2F;
+            color: #D32F2F;
+            margin: 1rem 0;
+            width: -webkit-min-content;
+            width: -moz-min-content;
+            width: min-content;
+            white-space: nowrap;
+        }
+
+        #settings_page button svg {
+            fill: none;
+            stroke: rgba(var(--rgb-bw), 0.8);
+            stroke-width: 6;
+            overflow: visible;
+            stroke: #D32F2F;
+        }
+
+        #settings_page button:hover {
+            background: #D32F2F;
+            color: white;
+        }
+
+        #settings_page button:hover svg {
+            stroke: white;
+        }
+
+        #settings_page div {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            width: 100%;
+            padding: 1rem 0;
+            -ms-flex-line-pack: center;
             align-content: center;
-      }
-      
-      #settings_page .row {
-        -webkit-box-flex: 1;
+        }
+
+        #settings_page .row {
+            -webkit-box-flex: 1;
             -ms-flex: 1;
-                flex: 1;
-      }
-      
-      #settings_page .row span {
-        font-size: 0.8rem;
-      }
-      
-      #settings_page .border-card {
-        color: inherit;
-        text-decoration: none;
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        padding: 0.5rem 0;
-        width: auto;
-      }
-      
-      #settings_page .border-card svg {
-        fill: var(--accent-color);
-        display: flexbox;
-        height: 2rem;
-        -ms-flex-item-align: center;
+            flex: 1;
+        }
+
+        #settings_page .row span {
+            font-size: 0.8rem;
+        }
+
+        #settings_page .border-card {
+            color: inherit;
+            text-decoration: none;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            padding: 0.5rem 0;
+            width: auto;
+        }
+
+        #settings_page .border-card svg {
+            fill: var(--accent-color);
+            display: flexbox;
+            height: 2rem;
+            -ms-flex-item-align: center;
             align-self: center;
-        margin: 0.5rem;
-      }
-      
-      .switch {
-        display: flexbox;
-        width: 2rem;
-        -ms-flex-line-pack: center;
+            margin: 0.5rem;
+        }
+
+        .switch {
+            display: flexbox;
+            width: 2rem;
+            -ms-flex-line-pack: center;
             align-content: center;
-        position: relative;
-        height: 1.5rem;
-        z-index: 1;
-        margin-right: 1rem;
-        -ms-flex-item-align: center;
+            position: relative;
+            height: 1.5rem;
+            z-index: 1;
+            margin-right: 1rem;
+            -ms-flex-item-align: center;
             align-self: center;
-        -webkit-tap-highlight-color: transparent;
-      }
-      
-      .switch input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-      }
-      
-      .slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        width: 3rem;
-        background-color: var(--dark-color);
-        -webkit-transition: .4s;
-        transition: .4s;
-      }
-      
-      .slider:before {
-        position: absolute;
-        -ms-flex-item-align: center;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 3rem;
+            background-color: var(--dark-color);
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        .slider:before {
+            position: absolute;
+            -ms-flex-item-align: center;
             -ms-grid-row-align: center;
             align-self: center;
-        content: "";
-        height: 1.6rem;
-        width: 1.6rem;
-        background-color: white;
-        -webkit-transform: translateY(-1px);
-                transform: translateY(-1px);
-        -webkit-transition: .4s;
-        transition: .4s;
-        -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.24);
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.24);
-      }
-      
-      input:checked + .slider {
-        background-color: var(--accent-color);
-      }
-      
-      input:checked + .slider:before {
-        -webkit-transform: translate(1.5rem, -1px);
-                transform: translate(1.5rem, -1px);
-      }
-      
-      .slider.round {
-        border-radius: 2rem;
-      }
-      
-      .slider.round:before {
-        border-radius: 50%;
-      }
-      
-      .solid-background {
-        background: rgba(var(--background), 1);
-      }
-      
-      a {
-        color: var(--accent-color);
-        text-decoration: none;
-        text-transform: uppercase;
-      }
-      
-      .medium-top-bottom-margin {
-        margin: 0.5rem 0;
-      }
-      
-      #sign_in {
-        border-radius: 0;
-        -webkit-box-orient: vertical;
-        -webkit-box-direction: normal;
+            content: "";
+            height: 1.6rem;
+            width: 1.6rem;
+            background-color: white;
+            -webkit-transform: translateY(-1px);
+            transform: translateY(-1px);
+            -webkit-transition: .4s;
+            transition: .4s;
+            -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.24);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.24);
+        }
+
+        input:checked+.slider {
+            background-color: var(--accent-color);
+        }
+
+        input:checked+.slider:before {
+            -webkit-transform: translate(1.5rem, -1px);
+            transform: translate(1.5rem, -1px);
+        }
+
+        .slider.round {
+            border-radius: 2rem;
+        }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+
+        .solid-background {
+            background: rgba(var(--background), 1);
+        }
+
+        a {
+            color: var(--accent-color);
+            text-decoration: none;
+            text-transform: uppercase;
+        }
+
+        .medium-top-bottom-margin {
+            margin: 0.5rem 0;
+        }
+
+        #sign_in {
+            border-radius: 0;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
             -ms-flex-flow: column wrap;
-                flex-flow: column wrap;
-        padding: 2rem;
-        overflow: hidden;
-        margin: 1rem;
-        -ms-flex-item-align: center;
+            flex-flow: column wrap;
+            padding: 2rem;
+            overflow: hidden;
+            margin: 1rem;
+            -ms-flex-item-align: center;
             -ms-grid-row-align: center;
             align-self: center;
-        width: calc(100% - 2rem);
-      }
-      
-      #sign_in h2 {
-        margin: 0.5rem 0;
-        z-index: 3;
-        width: 100%;
-      }
-      
-      #sign_in p:nth-of-type(1) {
-        margin-bottom: 2rem;
-        z-index: 3;
-      }
-      
-      #sign_in span {
-        position: absolute;
-        background: var(--accent-color);
-        border-radius: 10%;
-        padding: 10rem;
-        top: -8rem;
-        right: -10rem;
-        z-index: 1;
-        -webkit-transform: rotate(30deg);
-                transform: rotate(30deg);
-      }
-      
-      #sign_in #sign_in_options {
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        -webkit-box-pack: center;
+            width: calc(100% - 2rem);
+        }
+
+        #sign_in h2 {
+            margin: 0.5rem 0;
+            z-index: 3;
+            width: 100%;
+        }
+
+        #sign_in p:nth-of-type(1) {
+            margin-bottom: 2rem;
+            z-index: 3;
+        }
+
+        #sign_in span {
+            position: absolute;
+            background: var(--accent-color);
+            border-radius: 10%;
+            padding: 10rem;
+            top: -8rem;
+            right: -10rem;
+            z-index: 1;
+            -webkit-transform: rotate(30deg);
+            transform: rotate(30deg);
+        }
+
+        #sign_in #sign_in_options {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-pack: center;
             -ms-flex-pack: center;
-                justify-content: center;
-        margin-bottom: 4rem;
-        z-index: 3;
-      }
-      
-      #sign_in #sign_in_options button {
-        margin: initial;
-        -webkit-box-pack: center;
+            justify-content: center;
+            margin-bottom: 4rem;
+            z-index: 3;
+        }
+
+        #sign_in #sign_in_options button {
+            margin: initial;
+            -webkit-box-pack: center;
             -ms-flex-pack: center;
-                justify-content: center;
-        text-align: center;
-        -webkit-box-orient: vertical;
-        -webkit-box-direction: normal;
+            justify-content: center;
+            text-align: center;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
             -ms-flex-direction: column;
-                flex-direction: column;
-        margin: 0.5rem;
-        width: 8rem;
-        background: var(--foreground);
-        -webkit-transition: -webkit-box-shadow 0.3s ease;
-        transition: -webkit-box-shadow 0.3s ease;
-        transition: box-shadow 0.3s ease;
-        transition: box-shadow 0.3s ease, -webkit-box-shadow 0.3s ease;
-        border: 1px solid rgba(var(--rgb-bw), 0.06);
-      }
-      
-      #sign_in #sign_in_options button svg {
-        height: 2rem;
-        width: 2rem;
-        margin: 1rem;
-      }
-      
-      #sign_in #sign_in_options button:hover {
-        -webkit-box-shadow: 0.1rem 0.2rem 2rem rgba(0, 0, 0, 0.24);
-                box-shadow: 0.1rem 0.2rem 2rem rgba(0, 0, 0, 0.24);
-      }
-      
-      #sign_in #priv_key_sign_in {
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        -webkit-box-orient: vertical;
-        -webkit-box-direction: normal;
+            flex-direction: column;
+            margin: 0.5rem;
+            width: 8rem;
+            background: var(--foreground);
+            -webkit-transition: -webkit-box-shadow 0.3s ease;
+            transition: -webkit-box-shadow 0.3s ease;
+            transition: box-shadow 0.3s ease;
+            transition: box-shadow 0.3s ease, -webkit-box-shadow 0.3s ease;
+            border: 1px solid rgba(var(--rgb-bw), 0.06);
+        }
+
+        #sign_in #sign_in_options button svg {
+            height: 2rem;
+            width: 2rem;
+            margin: 1rem;
+        }
+
+        #sign_in #sign_in_options button:hover {
+            -webkit-box-shadow: 0.1rem 0.2rem 2rem rgba(0, 0, 0, 0.24);
+            box-shadow: 0.1rem 0.2rem 2rem rgba(0, 0, 0, 0.24);
+        }
+
+        #sign_in #priv_key_sign_in {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
             -ms-flex-flow: column wrap;
-                flex-flow: column wrap;
-        z-index: 3;
-      }
-      
-      #sign_in #priv_key_sign_in .input {
-        background: rgba(0, 0, 0, 0.24);
-      }
-      
-      #sign_in #priv_key_sign_in button {
-        margin-left: initial;
-        margin-bottom: 2rem;
-        background: rgba(var(--rgb-bw), 0.04);
-        width: -webkit-fit-content;
-        width: -moz-fit-content;
-        width: fit-content;
-      }
-      
-      .qr-scanner {
-        position: relative;
-        z-index: 3;
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        -webkit-box-orient: vertical;
-        -webkit-box-direction: normal;
+            flex-flow: column wrap;
+            z-index: 3;
+        }
+
+        #sign_in #priv_key_sign_in .input {
+            background: rgba(0, 0, 0, 0.24);
+        }
+
+        #sign_in #priv_key_sign_in button {
+            margin-left: initial;
+            margin-bottom: 2rem;
+            background: rgba(var(--rgb-bw), 0.04);
+            width: -webkit-fit-content;
+            width: -moz-fit-content;
+            width: fit-content;
+        }
+
+        .qr-scanner {
+            position: relative;
+            z-index: 3;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
             -ms-flex-flow: column wrap;
-                flex-flow: column wrap;
-        -webkit-box-align: center;
+            flex-flow: column wrap;
+            -webkit-box-align: center;
             -ms-flex-align: center;
-                align-items: center;
-      }
-      
-      .qr-scanner button {
-        -ms-flex-item-align: center;
+            align-items: center;
+        }
+
+        .qr-scanner button {
+            -ms-flex-item-align: center;
             -ms-grid-row-align: center;
             align-self: center;
-        margin: 1rem auto;
-      }
-      
-      .qr-scanner button svg {
-        fill: none;
-        stroke: rgba(var(--rgb-bw), 0.8);
-        stroke-width: 6;
-        overflow: visible;
-      }
-      
-      .footer {
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        -webkit-box-pack: center;
+            margin: 1rem auto;
+        }
+
+        .qr-scanner button svg {
+            fill: none;
+            stroke: rgba(var(--rgb-bw), 0.8);
+            stroke-width: 6;
+            overflow: visible;
+        }
+
+        .footer {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-pack: center;
             -ms-flex-pack: center;
-                justify-content: center;
-        -ms-flex-item-align: end;
+            justify-content: center;
+            -ms-flex-item-align: end;
             align-self: flex-end;
-      }
-      
-      .anim-rotate {
-        -webkit-animation: switch-rotate 0.6s ease;
-                animation: switch-rotate 0.6s ease;
-      }
-      
-      @-webkit-keyframes switch-rotate {
-        100% {
-          -webkit-transform: rotate(180deg);
-                  transform: rotate(180deg);
         }
-      }
-      
-      @keyframes switch-rotate {
-        100% {
-          -webkit-transform: rotate(180deg);
-                  transform: rotate(180deg);
+
+        .anim-rotate {
+            -webkit-animation: switch-rotate 0.6s ease;
+            animation: switch-rotate 0.6s ease;
         }
-      }
-      
-      .page {
-        display: -ms-grid;
-        display: grid;
-        position: relative;
-        margin: 1rem;
-        -webkit-animation: fadein 0.4s ease;
-                animation: fadein 0.4s ease;
-      }
-      
-      .fade-in {
-        -webkit-animation: fadein 0.4s ease;
-                animation: fadein 0.4s ease;
-      }
-      
-      @-webkit-keyframes fadein {
-        0% {
-          opacity: 0;
+
+        @-webkit-keyframes switch-rotate {
+            100% {
+                -webkit-transform: rotate(180deg);
+                transform: rotate(180deg);
+            }
         }
-        100% {
-          opacity: 1;
+
+        @keyframes switch-rotate {
+            100% {
+                -webkit-transform: rotate(180deg);
+                transform: rotate(180deg);
+            }
         }
-      }
-      
-      @keyframes fadein {
-        0% {
-          opacity: 0;
+
+        .page {
+            display: -ms-grid;
+            display: grid;
+            position: relative;
+            margin: 1rem;
+            -webkit-animation: fadein 0.4s ease;
+            animation: fadein 0.4s ease;
         }
-        100% {
-          opacity: 1;
+
+        .fade-in {
+            -webkit-animation: fadein 0.4s ease;
+            animation: fadein 0.4s ease;
         }
-      }
-      
-      .title {
-        font-weight: 500;
-      }
-      
-      .padding {
-        padding: 1rem;
-      }
-      
-      #background_art {
-        position: fixed;
-        pointer-events: none;
-        height: 100vh;
-        top: 0;
-        bottom: 0;
-        right: 0;
-        z-index: -1;
-        overflow: visible;
-      }
-      
-      #confirmation {
-        -webkit-box-orient: vertical;
-        -webkit-box-direction: normal;
+
+        @-webkit-keyframes fadein {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadein {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .title {
+            font-weight: 500;
+        }
+
+        .padding {
+            padding: 1rem;
+        }
+
+        #background_art {
+            position: fixed;
+            pointer-events: none;
+            height: 100vh;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            z-index: -1;
+            overflow: visible;
+        }
+
+        #confirmation {
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
             -ms-flex-direction: column;
-                flex-direction: column;
-        -webkit-box-pack: center;
+            flex-direction: column;
+            -webkit-box-pack: center;
             -ms-flex-pack: center;
-                justify-content: center;
-        padding: 1rem;
-      }
-      
-      #confirmation p {
-        margin: 1rem;
-        font-size: 1rem;
-        font-weight: 500;
-        color: rgba(var(--rgb-bw), 1) !important;
-      }
-      
-      #confirmation div {
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-      }
-      
-      #confirmation div button:first-of-type {
-        margin-left: auto;
-      }
-      
-      .input {
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        width: 100%;
-        margin: 1rem 0;
-        background: rgba(var(--rgb-bw), 0.06);
-        -webkit-box-align: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        #confirmation p {
+            margin: 1rem;
+            font-size: 1rem;
+            font-weight: 500;
+            color: rgba(var(--rgb-bw), 1) !important;
+        }
+
+        #confirmation div {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+        }
+
+        #confirmation div button:first-of-type {
+            margin-left: auto;
+        }
+
+        .input {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            width: 100%;
+            margin: 1rem 0;
+            background: rgba(var(--rgb-bw), 0.06);
+            -webkit-box-align: center;
             -ms-flex-align: center;
-                align-items: center;
-        border-radius: 0.2rem;
-        overflow: hidden;
-      }
-      
-      .input input, .input textarea {
-        color: var(--light-text);
-        padding: 1rem 0.5rem;
-        width: 100%;
-        font-size: 1rem;
-        background: transparent;
-        margin-left: 0;
-      }
-      
-      .input input:focus, .input textarea:focus {
-        outline: none;
-      }
-      
-      .input svg {
-        height: 1.2rem;
-        width: 1.2rem;
-        margin: 0 0.5rem 0 1rem;
-        fill: none;
-        stroke: rgba(var(--rgb-bw), 0.8);
-        stroke-width: 6;
-        overflow: visible;
-      }
-      
-      .input:focus-within {
-        background: rgba(0, 0, 0, 0.1);
-      }
-      
-      input, button, textarea {
-        position: relative;
-        border: none;
-        font-size: 1rem;
-        border-radius: 0.2rem;
-      }
-      
-      button {
-        position: relative;
-        height: inherit;
-        padding: 1rem;
-        background: transparent;
-        -webkit-transition: background 0.3s ease;
-        transition: background 0.3s ease;
-        display: -webkit-inline-box;
-        display: -ms-inline-flexbox;
-        display: inline-flex;
-        -webkit-box-align: center;
+            align-items: center;
+            border-radius: 0.2rem;
+            overflow: hidden;
+        }
+
+        .input input,
+        .input textarea {
+            color: var(--light-text);
+            padding: 1rem 0.5rem;
+            width: 100%;
+            font-size: 1rem;
+            background: transparent;
+            margin-left: 0;
+        }
+
+        .input input:focus,
+        .input textarea:focus {
+            outline: none;
+        }
+
+        .input svg {
+            height: 1.2rem;
+            width: 1.2rem;
+            margin: 0 0.5rem 0 1rem;
+            fill: none;
+            stroke: rgba(var(--rgb-bw), 0.8);
+            stroke-width: 6;
+            overflow: visible;
+        }
+
+        .input:focus-within {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        input,
+        button,
+        textarea {
+            position: relative;
+            border: none;
+            font-size: 1rem;
+            border-radius: 0.2rem;
+        }
+
+        button {
+            position: relative;
+            height: inherit;
+            padding: 1rem;
+            background: transparent;
+            -webkit-transition: background 0.3s ease;
+            transition: background 0.3s ease;
+            display: -webkit-inline-box;
+            display: -ms-inline-flexbox;
+            display: inline-flex;
+            -webkit-box-align: center;
             -ms-flex-align: center;
-                align-items: center;
-        margin: 0 0.2rem;
-        font-weight: 500;
-        text-transform: uppercase;
-        cursor: pointer;
-        color: var(--light-text);
-        font-size: 0.9rem;
-      }
-      
-      button svg {
-        fill: rgba(var(--rgb-bw), 1);
-        height: 1rem;
-      }
-      
-      button:focus {
-        outline: none;
-      }
-      
-      button[disabled] {
-        opacity: 0.5 !important;
-        cursor: default;
-      }
-      
-      .show {
-        display: block;
-      }
-      
-      .hide {
-        opacity: 0;
-        pointer-events: none;
-      }
-      
-      .hide-completely {
-        display: none !important;
-      }
-      
-      .hide-on-mobile, .hide-page-on-mobile {
-        display: none;
-      }
-      
-      .hide-on-desktop {
-        display: initial;
-      }
-      
-      .no-transformations {
-        -webkit-transform: none !important;
-                transform: none !important;
-      }
-      
-      .no-bottom-margin {
-        margin-bottom: 0;
-      }
-      
-      .top-margin {
-        margin-top: 0.3rem;
-      }
-      
-      #top_nav {
-        position: relative;
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        -webkit-box-orient: horizontal;
-        -webkit-box-direction: normal;
+            align-items: center;
+            margin: 0 0.2rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            cursor: pointer;
+            color: var(--light-text);
+            font-size: 0.9rem;
+        }
+
+        button svg {
+            fill: rgba(var(--rgb-bw), 1);
+            height: 1rem;
+        }
+
+        button:focus {
+            outline: none;
+        }
+
+        button[disabled] {
+            opacity: 0.5 !important;
+            cursor: default;
+        }
+
+        .show {
+            display: block;
+        }
+
+        .hide {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .hide-completely {
+            display: none !important;
+        }
+
+        .hide-on-mobile,
+        .hide-page-on-mobile {
+            display: none;
+        }
+
+        .hide-on-desktop {
+            display: initial;
+        }
+
+        .no-transformations {
+            -webkit-transform: none !important;
+            transform: none !important;
+        }
+
+        .no-bottom-margin {
+            margin-bottom: 0;
+        }
+
+        .top-margin {
+            margin-top: 0.3rem;
+        }
+
+        #top_nav {
+            position: relative;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-orient: horizontal;
+            -webkit-box-direction: normal;
             -ms-flex-direction: row;
-                flex-direction: row;
-        -webkit-box-align: center;
+            flex-direction: row;
+            -webkit-box-align: center;
             -ms-flex-align: center;
-                align-items: center;
-        z-index: 5;
-        height: 4rem;
-      }
-      
-      #top_nav .spacer {
-        -webkit-box-flex: 1;
+            align-items: center;
+            z-index: 5;
+            height: 4rem;
+        }
+
+        #top_nav .spacer {
+            -webkit-box-flex: 1;
             -ms-flex: 1;
-                flex: 1;
-      }
-      
-      #top_nav .logo {
-        margin-right: 0.5rem;
-        cursor: pointer;
-      }
-      
-      #top_nav h2 {
-        padding: 0 1rem;
-        margin: 0;
-      }
-      
-      .logo {
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        -webkit-box-align: center;
+            flex: 1;
+        }
+
+        #top_nav .logo {
+            margin-right: 0.5rem;
+            cursor: pointer;
+        }
+
+        #top_nav h2 {
+            padding: 0 1rem;
+            margin: 0;
+        }
+
+        .logo {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: center;
             -ms-flex-align: center;
-                align-items: center;
-        font-size: 1.2rem;
-        padding-left: 1rem;
-        width: 100%;
-        -ms-flex-wrap: nowrap;
+            align-items: center;
+            font-size: 1.2rem;
+            padding-left: 1rem;
+            width: 100%;
+            -ms-flex-wrap: nowrap;
             flex-wrap: nowrap;
-      }
-      
-      .logo .cls-2, .logo .cls-3 {
-        fill: rgba(var(--rgb-bw), 1);
-        font-size: 146.9px;
-        font-family: ArialMT, Arial;
-      }
-      
-      .logo svg {
-        height: 2.5rem;
-      }
-      
-      .logo h4 {
-        margin: 0;
-      }
-      
-      .active {
-        opacity: 1 !important;
-        color: var(--accent-color);
-      }
-      
-      .active svg {
-        fill: var(--accent-color);
-      }
-      
-      .svg-margin-right svg {
-        margin-right: 0.5rem;
-      }
-      
-      .card {
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        -webkit-box-orient: horizontal;
-        -webkit-box-direction: normal;
+        }
+
+        .logo .cls-2,
+        .logo .cls-3 {
+            fill: rgba(var(--rgb-bw), 1);
+            font-size: 146.9px;
+            font-family: ArialMT, Arial;
+        }
+
+        .logo svg {
+            height: 2.5rem;
+        }
+
+        .logo h4 {
+            margin: 0;
+        }
+
+        .active {
+            opacity: 1 !important;
+            color: var(--accent-color);
+        }
+
+        .active svg {
+            fill: var(--accent-color);
+        }
+
+        .svg-margin-right svg {
+            margin-right: 0.5rem;
+        }
+
+        .card {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-orient: horizontal;
+            -webkit-box-direction: normal;
             -ms-flex-direction: row;
-                flex-direction: row;
-        position: relative;
-        -webkit-box-align: center;
+            flex-direction: row;
+            position: relative;
+            -webkit-box-align: center;
             -ms-flex-align: center;
-                align-items: center;
-        margin-bottom: 0.5rem;
-        padding: 1rem;
-      }
-      
-      .dropdown {
-        position: relative;
-        /*&:hover .dropdown-content {
+            align-items: center;
+            margin-bottom: 0.5rem;
+            padding: 1rem;
+        }
+
+        .dropdown {
+            position: relative;
+            /*&:hover .dropdown-content {
               display: flex;
           }*/
-      }
-      
-      .dropdown-content {
-        overflow: hidden;
-        position: absolute;
-        z-index: 2;
-        margin: 1rem;
-        right: 2rem;
-        min-width: 24rem;
-        background: var(--foreground);
-        -webkit-box-shadow: 0.2rem 0.4rem 1rem rgba(0, 0, 0, 0.24), -0.1rem -0.2rem 0.4rem rgba(0, 0, 0, 0.12);
-                box-shadow: 0.2rem 0.4rem 1rem rgba(0, 0, 0, 0.24), -0.1rem -0.2rem 0.4rem rgba(0, 0, 0, 0.12);
-        border-radius: 0.2rem;
-      }
-      
-      #admin_scanner .container-header {
-        padding: 0;
-        margin-bottom: 1rem;
-      }
-      
-      #admin_scanner .container-header h3 {
-        margin: 0;
-      }
-      
-      #admin_scanner #scanner_line {
-        position: absolute;
-        height: 0.1rem;
-        background: var(--accent-color);
-        opacity: 0.5;
-        width: 100%;
-        top: 0;
-      }
-      
-      .scan {
-        -webkit-animation: scan 2s infinite;
-                animation: scan 2s infinite;
-      }
-      
-      @-webkit-keyframes scan {
-        50% {
-          top: 100%;
         }
-      }
-      
-      @keyframes scan {
-        50% {
-          top: 100%;
+
+        .dropdown-content {
+            overflow: hidden;
+            position: absolute;
+            z-index: 2;
+            margin: 1rem;
+            right: 2rem;
+            min-width: 24rem;
+            background: var(--foreground);
+            -webkit-box-shadow: 0.2rem 0.4rem 1rem rgba(0, 0, 0, 0.24), -0.1rem -0.2rem 0.4rem rgba(0, 0, 0, 0.12);
+            box-shadow: 0.2rem 0.4rem 1rem rgba(0, 0, 0, 0.24), -0.1rem -0.2rem 0.4rem rgba(0, 0, 0, 0.12);
+            border-radius: 0.2rem;
         }
-      }
-      
-      #countdown {
-        place-content: center;
-        text-align: center;
-      }
-      
-      #countdown #timer {
-        position: relative;
-      }
-      
-      #countdown #timer h1 {
-        font-size: 3rem;
-        margin: 0;
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        -webkit-transform: translate(-50%, -50%);
-                transform: translate(-50%, -50%);
-      }
-      
-      #countdown #timer svg {
-        fill: none;
-        stroke: #00C853;
-        stroke-width: 2;
-        overflow: visible;
-        height: 120px;
-        -webkit-transition: stroke-dashoffset 0.3s ease;
-        transition: stroke-dashoffset 0.3s ease;
-      }
-      
-      #countdown #timer svg .outer-circle {
-        -webkit-transform-origin: center;
-                transform-origin: center;
-        stroke-dasharray: 240;
-      }
-      
-      #auth_success {
-        place-content: center;
-      }
-      
-      #auth_success svg {
-        fill: none;
-        stroke: #00C853;
-        stroke-width: 2;
-        overflow: visible;
-        height: 120px;
-        -webkit-animation: anime 3s infinite;
-                animation: anime 3s infinite;
-      }
-      
-      #auth_success svg .check-mark {
-        stroke-dashoffset: 60;
-        stroke-dasharray: 60;
-        -webkit-animation: anime 0.6s 0.6s ease forwards;
-                animation: anime 0.6s 0.6s ease forwards;
-      }
-      
-      #auth_success svg .outer-circle {
-        -webkit-transform-origin: center;
-                transform-origin: center;
-        stroke-dashoffset: -240;
-        stroke-dasharray: 240;
-        -webkit-transform: scale(1.2);
-                transform: scale(1.2);
-        -webkit-animation: scale 1.2s ease forwards;
-                animation: scale 1.2s ease forwards;
-      }
-      
-      #auth_success h2 {
-        text-align: center;
-        font-weight: normal;
-        -webkit-transform: translateY(0.4rem);
-                transform: translateY(0.4rem);
-        opacity: 0;
-        -webkit-animation: float 0.6s 1s ease forwards;
-                animation: float 0.6s 1s ease forwards;
-        margin-bottom: 0;
-      }
-      
-      @-webkit-keyframes anime {
-        100% {
-          stroke-dashoffset: 0;
-        }
-      }
-      
-      @keyframes anime {
-        100% {
-          stroke-dashoffset: 0;
-        }
-      }
-      
-      @-webkit-keyframes scale {
-        60% {
-          -webkit-transform: scale(1.2);
-                  transform: scale(1.2);
-        }
-        100% {
-          stroke-dashoffset: 0;
-          -webkit-transform: scale(1);
-                  transform: scale(1);
-        }
-      }
-      
-      @keyframes scale {
-        60% {
-          -webkit-transform: scale(1.2);
-                  transform: scale(1.2);
-        }
-        100% {
-          stroke-dashoffset: 0;
-          -webkit-transform: scale(1);
-                  transform: scale(1);
-        }
-      }
-      
-      @-webkit-keyframes float {
-        100% {
-          opacity: 1;
-          -webkit-transform: none;
-                  transform: none;
-        }
-      }
-      
-      @keyframes float {
-        100% {
-          opacity: 1;
-          -webkit-transform: none;
-                  transform: none;
-        }
-      }
-      
-      .container-header {
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        -webkit-box-align: center;
+
+        .container-header {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: center;
             -ms-flex-align: center;
-                align-items: center;
-        -webkit-box-orient: horizontal;
-        -webkit-box-direction: normal;
+            align-items: center;
+            -webkit-box-orient: horizontal;
+            -webkit-box-direction: normal;
             -ms-flex-direction: row;
-                flex-direction: row;
-        width: 100%;
-        padding: 0 1rem;
-      }
-      
-      .container-header h3 {
-        -webkit-box-flex: 1;
+            flex-direction: row;
+            width: 100%;
+            padding: 0 1rem;
+        }
+
+        .container-header h3 {
+            -webkit-box-flex: 1;
             -ms-flex: 1;
-                flex: 1;
-        font-weight: 500;
-      }
-      
-      .container-header span {
-        color: var(--accent-color);
-        border-radius: 0.2rem;
-        margin-right: 0.2rem;
-        padding: 0.5rem 1rem;
-        font-weight: 500;
-      }
-      
-      .back-arrow {
-        fill: none;
-        stroke: rgba(var(--rgb-bw), 0.8);
-        stroke-width: 6;
-        overflow: visible;
-        width: 2rem;
-        height: 2rem;
-        padding: 0.5rem 0.5rem 0.5rem 0;
-        cursor: pointer;
-      }
-      
-      .close-svg, .tick-mark {
-        fill: none;
-        stroke: rgba(var(--rgb-bw), 0.8);
-        stroke-width: 6;
-        overflow: visible;
-        height: 2rem;
-        width: 2rem;
-      }
-      
-      .close-svg {
-        padding: 0.6rem;
-      }
-      
-      #textCopied {
-        padding: 1rem;
-        border-radius: 2rem;
-        background: var(--sec-color);
-        position: fixed;
-        bottom: 0;
-        pointer-events: none;
-        margin: 2rem 0;
-        left: 50%;
-        -webkit-transform: translateX(-50%);
-                transform: translateX(-50%);
-        -webkit-transition: 0.3s opacity ease;
-        transition: 0.3s opacity ease;
-        z-index: 10;
-      }
-      
-      .opac {
-        opacity: 1 !important;
-      }
-      
-      p {
-        font-size: 0.9rem;
-        line-height: 1.6;
-        color: var(--light-text);
-      }
-      
-      .commit {
-        color: var(--accent-color);
-        border: 1px solid var(--accent-color);
-        padding: 0.6rem;
-      }
-      
-      #notification {
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-      }
-      
-      #show_message {
-        -webkit-transform: translate(0, 0.4rem);
-                transform: translate(0, 0.4rem);
-        -webkit-transition: opacity 0.3s ease, -webkit-transform 0.3s ease;
-        transition: opacity 0.3s ease, -webkit-transform 0.3s ease;
-        transition: transform 0.3s ease, opacity 0.3s ease;
-        transition: transform 0.3s ease, opacity 0.3s ease, -webkit-transform 0.3s ease;
-        -webkit-box-shadow: 0.2rem 0.4rem 0.8rem rgba(0, 0, 0, 0.16);
-                box-shadow: 0.2rem 0.4rem 0.8rem rgba(0, 0, 0, 0.16);
-        -webkit-box-align: center;
-            -ms-flex-align: center;
-                align-items: center;
-        -webkit-box-orient: horizontal;
-        -webkit-box-direction: normal;
-            -ms-flex-direction: row;
-                flex-direction: row;
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        color: white;
-        position: fixed;
-        bottom: 0;
-        right: 0;
-        width: 100%;
-        z-index: 11;
-      }
-      
-      #show_message span {
-        font-weight: 500;
-        padding: 1rem;
-        -webkit-box-flex: 1;
-            -ms-flex: 1;
-                flex: 1;
-      }
-      
-      #show_message button {
-        padding: 0.5rem 1rem;
-        margin: 0;
-      }
-      
-      #show_message button svg {
-        stroke: white;
-      }
-      
-      main, #admin_scanner {
-        padding: 1rem 2rem;
-      }
-      
-      main h3, #admin_scanner h3 {
-        margin-bottom: 2rem;
-      }
-      
-      .main-btn {
-        width: 100%;
-        -webkit-box-pack: center;
-            -ms-flex-pack: center;
-                justify-content: center;
-        background: #00C853;
-        color: rgba(var(--background), 1);
-        margin: 2rem 0;
-      }
-      
-      .header {
-        position: -webkit-sticky;
-        position: sticky;
-        top: 0;
-        background: var(--foreground);
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        -webkit-box-orient: horizontal;
-        -webkit-box-direction: normal;
-            -ms-flex-flow: row;
-                flex-flow: row;
-        border-bottom: 1px solid rgba(var(--rgb-bw), 0.1);
-        -webkit-box-align: center;
-            -ms-flex-align: center;
-                align-items: center;
-        z-index: 2;
-      }
-      
-      .header svg {
-        fill: none;
-        stroke: rgba(var(--rgb-bw), 0.8);
-        stroke-width: 6;
-        overflow: visible;
-        height: 2rem;
-        width: 2rem;
-        cursor: pointer;
-        padding: 0.4rem;
-        margin-left: 1rem;
-      }
-      
-      .header h3 {
-        padding: 0 0.5rem;
-        display: inline-flexbox;
-      }
-      
-      .back-art {
-        position: absolute;
-        z-index: 0;
-      }
-      
-      .icon {
-        height: 2rem !important;
-        width: 2rem !important;
-        padding: 0.4rem;
-        border-radius: 0.4rem;
-        margin-right: 0.4rem;
-        overflow: visible;
-        fill: none !important;
-        stroke: #00C853;
-        stroke-width: 8;
-        background: white;
-      }
-      
-      #profile_btn svg {
-        fill: none;
-        stroke: rgba(var(--rgb-bw), 0.8);
-        stroke-width: 6;
-        overflow: visible;
-        height: 1.4rem;
-      }
-      
-      .center {
-        position: relative;
-        display: -ms-grid;
-        display: grid;
-        place-content: center;
-        height: 100%;
-        text-align: center;
-      }
-      
-      .capitalise {
-        text-transform: capitalize;
-      }
-      
-      #show_all, #project_explorer {
-        margin: 0;
-      }
-      
-      @media only screen and (min-width: 640px) {
-        ::-webkit-scrollbar {
-          width: 0.3rem;
+            flex: 1;
+            font-weight: 500;
         }
-        ::-webkit-scrollbar-thumb {
-          background: rgba(var(--rgb-bw), 0.3);
+
+        .container-header span {
+            color: var(--accent-color);
+            border-radius: 0.2rem;
+            margin-right: 0.2rem;
+            padding: 0.5rem 1rem;
+            font-weight: 500;
         }
-        ::-webkit-scrollbar-thumb:hover {
-          background: rgba(var(--rgb-bw), 0.6);
+
+        .back-arrow {
+            fill: none;
+            stroke: rgba(var(--rgb-bw), 0.8);
+            stroke-width: 6;
+            overflow: visible;
+            width: 2rem;
+            height: 2rem;
+            padding: 0.5rem 0.5rem 0.5rem 0;
+            cursor: pointer;
         }
-        .hide-on-desktop {
-          display: none !important;
+
+        .close-svg,
+        .tick-mark {
+            fill: none;
+            stroke: rgba(var(--rgb-bw), 0.8);
+            stroke-width: 6;
+            overflow: visible;
+            height: 2rem;
+            width: 2rem;
         }
-        .hide-on-mobile {
-          display: -webkit-box;
-          display: -ms-flexbox;
-          display: flex;
+
+        .close-svg {
+            padding: 0.6rem;
         }
-        .hide-page-on-mobile {
-          display: -ms-grid;
-          display: grid;
+
+        #textCopied {
+            padding: 1rem;
+            border-radius: 2rem;
+            background: var(--sec-color);
+            position: fixed;
+            bottom: 0;
+            pointer-events: none;
+            margin: 2rem 0;
+            left: 50%;
+            -webkit-transform: translateX(-50%);
+            transform: translateX(-50%);
+            -webkit-transition: 0.3s opacity ease;
+            transition: 0.3s opacity ease;
+            z-index: 10;
         }
-        .page, #show_all, #project_explorer {
-          margin: 1rem 4vw;
+
+        .opac {
+            opacity: 1 !important;
         }
-        #top_nav {
-          padding: 0 4vw;
+
+        p {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: var(--light-text);
         }
-        main, #admin_scanner {
-          -ms-grid-column-align: center;
-              justify-self: center;
-          width: 24rem;
+
+        .commit {
+            color: var(--accent-color);
+            border: 1px solid var(--accent-color);
+            padding: 0.6rem;
         }
+
+        #notification {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+        }
+
         #show_message {
-          -webkit-transform: translate(0.4rem, 0);
-                  transform: translate(0.4rem, 0);
-          margin: 1rem;
-          width: -webkit-max-content;
-          width: -moz-max-content;
-          width: max-content;
-          border-radius: 0.2rem;
+            -webkit-transform: translate(0, 0.4rem);
+            transform: translate(0, 0.4rem);
+            -webkit-transition: opacity 0.3s ease, -webkit-transform 0.3s ease;
+            transition: opacity 0.3s ease, -webkit-transform 0.3s ease;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            transition: transform 0.3s ease, opacity 0.3s ease, -webkit-transform 0.3s ease;
+            -webkit-box-shadow: 0.2rem 0.4rem 0.8rem rgba(0, 0, 0, 0.16);
+            box-shadow: 0.2rem 0.4rem 0.8rem rgba(0, 0, 0, 0.16);
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            -webkit-box-orient: horizontal;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: row;
+            flex-direction: row;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            color: white;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            z-index: 11;
         }
-        #sign_in {
-          width: 24rem;
-          height: auto;
-          border-radius: 0.4rem;
+
+        #show_message span {
+            font-weight: 500;
+            padding: 1rem;
+            -webkit-box-flex: 1;
+            -ms-flex: 1;
+            flex: 1;
         }
-        #floating_btn {
-          margin: 1rem;
+
+        #show_message button {
+            padding: 0.5rem 1rem;
+            margin: 0;
         }
-        .hover {
-          -webkit-transition: background 0.3s ease;
-          transition: background 0.3s ease;
-          cursor: pointer;
+
+        #show_message button svg {
+            stroke: white;
         }
-        .hover:hover {
-          background: rgba(var(--rgb-bw), 0.06);
+
+        main,
+        #admin_scanner {
+            padding: 1rem 2rem;
         }
-        .popup-container .popup {
-          width: auto;
-          -ms-flex-item-align: center;
-              -ms-grid-row-align: center;
-              align-self: center;
-          border-radius: 0.2rem;
+
+        main h3,
+        #admin_scanner h3 {
+            margin-bottom: 2rem;
         }
-        #add_intern_popup, #add_project_popup, #create_branch, #post_update, #confirmation {
-          padding: 1rem;
-          width: 24rem;
+
+        .main-btn {
+            width: 100%;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+            background: #00C853;
+            color: rgba(var(--background), 1);
+            margin: 2rem 0;
         }
-        #add_intern_popup button, #add_project_popup button, #create_branch button, #post_update button, #confirmation button {
-          margin-left: 0.5rem;
+
+        .header {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 0;
+            background: var(--foreground);
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-orient: horizontal;
+            -webkit-box-direction: normal;
+            -ms-flex-flow: row;
+            flex-flow: row;
+            border-bottom: 1px solid rgba(var(--rgb-bw), 0.1);
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            z-index: 2;
         }
-        #add_intern_popup button:first-of-type, #add_project_popup button:first-of-type, #create_branch button:first-of-type, #post_update button:first-of-type, #confirmation button:first-of-type {
-          margin-left: auto;
+
+        .header svg {
+            fill: none;
+            stroke: rgba(var(--rgb-bw), 0.8);
+            stroke-width: 6;
+            overflow: visible;
+            height: 2rem;
+            width: 2rem;
+            cursor: pointer;
+            padding: 0.4rem;
+            margin-left: 1rem;
         }
-        #confirmation p {
-          margin: 1rem;
-          margin-bottom: 2rem;
+
+        .header h3 {
+            padding: 0 0.5rem;
+            display: inline-flexbox;
         }
-      }
-      /*# sourceMappingURL=main.css.map */</style>
+
+        .back-art {
+            position: absolute;
+            z-index: 0;
+        }
+
+        .icon {
+            height: 2rem !important;
+            width: 2rem !important;
+            padding: 0.4rem;
+            border-radius: 0.4rem;
+            margin-right: 0.4rem;
+            overflow: visible;
+            fill: none !important;
+            stroke: #00C853;
+            stroke-width: 8;
+            background: white;
+        }
+
+        #profile_btn svg {
+            fill: none;
+            stroke: rgba(var(--rgb-bw), 0.8);
+            stroke-width: 6;
+            overflow: visible;
+            height: 1.4rem;
+        }
+
+        .center {
+            position: relative;
+            display: -ms-grid;
+            display: grid;
+            place-content: center;
+            height: 100%;
+            text-align: center;
+        }
+
+        .capitalise {
+            text-transform: capitalize;
+        }
+
+        #show_all,
+        #project_explorer {
+            margin: 0;
+        }
+
+        @media only screen and (min-width: 640px) {
+            ::-webkit-scrollbar {
+                width: 0.3rem;
+            }
+
+            ::-webkit-scrollbar-thumb {
+                background: rgba(var(--rgb-bw), 0.3);
+            }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: rgba(var(--rgb-bw), 0.6);
+            }
+
+            .hide-on-desktop {
+                display: none !important;
+            }
+
+            .hide-on-mobile {
+                display: -webkit-box;
+                display: -ms-flexbox;
+                display: flex;
+            }
+
+            .hide-page-on-mobile {
+                display: -ms-grid;
+                display: grid;
+            }
+
+            .page,
+            #show_all,
+            #project_explorer {
+                margin: 1rem 4vw;
+            }
+
+            #top_nav {
+                padding: 0 4vw;
+            }
+
+            main,
+            #admin_scanner {
+                -ms-grid-column-align: center;
+                justify-self: center;
+                width: 24rem;
+            }
+
+            #show_message {
+                -webkit-transform: translate(0.4rem, 0);
+                transform: translate(0.4rem, 0);
+                margin: 1rem;
+                width: -webkit-max-content;
+                width: -moz-max-content;
+                width: max-content;
+                border-radius: 0.2rem;
+            }
+
+            #sign_in {
+                width: 24rem;
+                height: auto;
+                border-radius: 0.4rem;
+            }
+
+            #floating_btn {
+                margin: 1rem;
+            }
+
+            .hover {
+                -webkit-transition: background 0.3s ease;
+                transition: background 0.3s ease;
+                cursor: pointer;
+            }
+
+            .hover:hover {
+                background: rgba(var(--rgb-bw), 0.06);
+            }
+
+            .popup-container .popup {
+                width: auto;
+                -ms-flex-item-align: center;
+                -ms-grid-row-align: center;
+                align-self: center;
+                border-radius: 0.2rem;
+            }
+
+            #add_intern_popup,
+            #add_project_popup,
+            #create_branch,
+            #post_update,
+            #confirmation {
+                padding: 1rem;
+                width: 24rem;
+            }
+
+            #add_intern_popup button,
+            #add_project_popup button,
+            #create_branch button,
+            #post_update button,
+            #confirmation button {
+                margin-left: 0.5rem;
+            }
+
+            #add_intern_popup button:first-of-type,
+            #add_project_popup button:first-of-type,
+            #create_branch button:first-of-type,
+            #post_update button:first-of-type,
+            #confirmation button:first-of-type {
+                margin-left: auto;
+            }
+
+            #confirmation p {
+                margin: 1rem;
+                margin-bottom: 2rem;
+            }
+        }
+
+        /*# sourceMappingURL=main.css.map */
+    </style>
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
 
     <script id="floGlobals">
@@ -1312,7 +1201,7 @@
                 FLO: ['https://explorer.mediciland.com/', 'https://livenet.flocha.in/', 'https://flosight.duckdns.org/', 'http://livenet-explorer.floexperiments.com/'],
                 FLO_TEST: ['https://testnet-flosight.duckdns.org/', 'https://testnet.flocha.in/']
             },
-            adminID: "FTMnSh1m99GSDAuxGyevs375BLudffso9F",
+            adminID: "FMeiptdJNtYQEtzyYAVNP8fjsDJ1i4EPfE",
             sendAmt: 0.001,
             fee: 0.0005,
 
@@ -1322,26 +1211,11 @@
 
             //for cloud apps
             subAdmins: [],
-            application: "TEDxKanke",
+            application: "TEST_MODE",
             vectorClock: {},
             appObjects: {},
             generalData: {},
             generalVC: {}
-        }
-    </script>
-    <script id="onLoadStartUp">
-        function onLoadStartUp() {
-    
-            //floDapps.addStartUpFunction('Sample', Promised Function)
-            //floDapps.setAppObjectStores({sampleObs1:{}, sampleObs2:{options{autoIncrement:true, keyPath:'SampleKey'}, Indexes:{sampleIndex:{}}}})
-            floDapps.setCustomPrivKeyInput(myInput)
-            floDapps.launchStartUp().then(result => {
-                console.log(result)
-                console.log(`Welcome FLO_ID: ${myFloID}`)
-                TEDxKanke.refreshObjectData().then(result => {
-                    console.log(result)
-                }).catch(error => console.error(error))
-            }).catch(error => console.error(error))
         }
     </script>
 
@@ -9949,10 +9823,10 @@
                                 myFloID = floCrypto.getFloIDfromPubkeyHex(myPubKey)
                                 // check if admin id
                                 if (myFloID == 'FK8jQufKXEsDwEgmF8vVJqHXfm2boAesj7') {
-                                    document.getElementById('floidTypeText').textContent = 'admin';
+                                    document.getElementById('floidTypeText').innerText = 'admin';
                                 }
                                 else {
-                                    document.getElementById('floidTypeText').textContent = 'user';
+                                    document.getElementById('floidTypeText').innerText = 'user';
                                 }
                                 resolve('Login Credentials loaded successful')
                             }).catch(error => reject(error))
@@ -10049,6 +9923,18 @@
         reactor.registerEvent("startUpErrorLog");
         reactor.addEventListener("startUpErrorLog", log => console.error(log))
 
+        function onLoadStartUp() {
+
+            //floDapps.addStartUpFunction('Sample', Promised Function)
+            //floDapps.setAppObjectStores({sampleObs1:{}, sampleObs2:{options{autoIncrement:true, keyPath:'SampleKey'}, Indexes:{sampleIndex:{}}}})
+            floDapps.setCustomPrivKeyInput(myInput)
+            floDapps.launchStartUp().then(result => {
+                console.log(result)
+                console.log(`Welcome FLO_ID: ${myFloID}`)
+                document.getElementById('username').innerHTML = `Hi, there! <br><p>${myFloID}</p>`
+                //App functions....
+            }).catch(error => console.error(error))
+        }
     </script>
     <script id="TEDxKanke_operations">
             
@@ -10638,6 +10524,17 @@
                     </svg>
                 </button>
                 <button id="qr_btn" class='hide-completely'>QR button</button>
+
+                <!--<div id="sourceSelectPanel">
+                    <label for="sourceSelect">Change video source:</label>
+                    <select id="sourceSelect" style="max-width:400px">
+                    </select>
+                </div>
+                <label for="decoding-style"> Decoding Style:</label>
+                <select id="decoding-style" size="1">
+                    <option value="once">Decode once</option>
+                    <option value="continuously">Decode continuously</option>
+                </select>-->
             </div>
             <p>Please scan your QR code to sign-in<br> or enter your private key.</p>
             <span></span>
@@ -10780,16 +10677,8 @@
         </button>
     </nav>
     <!--admin option to scan QR code-->
-    <section id="admin_scanner" class="fade-in page qr-scanner hide-completely container-card">
-        <header class="container-header">
-            <svg class="back-arrow" onclick="history.back()" viewBox="0 0 31.24 56.83">
-                <title>Go back</title>
-                <polyline points="29.83,1.41 2.83,28.41 29.83,55.41 " />
-            </svg>
-            <h3>Scan</h3>
-        </header>
+    <section id="admin_scanner" class="page qr-scanner hide-completely">
         <div id='admin_video_div' class="video">
-            <div id="scanner_line"></div>
             <video id="video2"></video>
         </div>
         <button id="switch_camera2">
@@ -10802,9 +10691,12 @@
                 <polygon points="64.61,32.98 63.74,31.18 54.87,35.49 51.22,26.33 49.36,27.07 53.8,38.23 			" />
             </svg>
         </button>
+        <button id="stop_admin_scanner">
+        </button>
+
     </section>
     <!--page for selecting events-->
-    <main id="main_page" class="container-card page fade-in">
+    <main id="main_page" class="container-card page">
         <h3>Select Venues</h3>
         <label class="checkbox">
             <input type="radio" name="venues">
@@ -10835,24 +10727,8 @@
         </label>
         <button id="authorize_btn" class="main-btn">Authorise</button>
     </main>
-    <div id="countdown" class="page padding hide-completely fade-in">
-        <div id="timer">
-            <svg viewBox="0 0 72.5 72.5" >
-                <circle class="outer-circle" cx="37.5" cy="37.5" r="36"/>
-            </svg>
-            <h1>20</h1>
-        </div>
-        <h4>Waiting for attendee to verify.</h4>
-    </div>
-    <div id="auth_success" class="page hide-completely padding fade-in">
-        <svg viewBox="0 0 72.5 72.5" >
-            <circle class="outer-circle" cx="37.5" cy="37.5" r="36"/>
-            <polyline class="check-mark" points="17.15,36.22 30,48.91 57.78,22.85 "/>
-        </svg>
-        <h2>Authorised</h2>
-    </div>
     <!--Settings page-->
-    <div id="settings_page" class="page hide-completely container-card fade-in">
+    <div id="settings_page" class="page hide-completely container-card">
         <h2>Settings</h2>
         <section>
             <h3>Account</h3>
@@ -11003,80 +10879,87 @@
         }
 
         function decodeContinuously(codeReader, selectedDeviceId, elementID) {
-            let scanLine = document.getElementById('scanner_line');
             codeReader.decodeFromInputVideoDeviceContinuously(selectedDeviceId, elementID, (result, err) => {
                 if (result) {
+                    let adminscanner = document.getElementById('admin_scanner');
+                    let signin = document.getElementById('sign_in');
+                    //check status of signin Pop
+                    var signinstatus = !signin.parentNode.classList.contains('hide');
                     // properly decoded qr code
                     console.log('decoded value is ' + result.text);
                     window.decodedQr = result.text;
-                    debugger;
-                    if (result.text.length == 34 && result.text[0] == 'F') {
-                        // Now run a function for the next 60 seconds 
-                        // Will execute myCallback every 5 seconds 
-                        var userfloID = result.text;
-                        var currenttime = Date.now();
-                        var interval = setInterval(myScan, 2000);
-                        // fetch for details of messages
-                        startCountdown()
-                        stopScanning()
-                        function myScan() {
+                    showMessege('', 'found qr ' + result.text);
+                    if (result.text.length == 34 && result.text[0] == 'F' && !adminscanner.classList.contains('hide-completely')) {
 
-                            floCloudAPI.requestApplicationData({ type: "TestMod", application: "teega", receiverID: window.myFloID })
-                                .then(function (value) {
+                        // check from ranchimallflo API if RUPEE exists on the cloud 
+                        var tokenexists = True;
 
-                                    //console.log(value);
-                                    var a = JSON.parse(value);
-                                    //console.log(a);
-                                    console.log('the length of a is ' + Object.keys(a).length);
+                        // check from cloudAPI if FLO ID has already used its Venue 
+                        var usedVenue = false;
 
-                                    for (var i = 0; i < Object.keys(a).length; i++) {
-                                        //console.log('scanning key');
-                                        //console.log(key);
-                                        var key = Object.keys(a)[i];
-                                        key = key.split('_');
+                        if (tokenexists && !usedVenue) {
+                            // Now run a function for the next 60 seconds 
+                            // Will execute myCallback every 5 seconds 
+                            var userfloID = result.text;
+                            var currenttime = Date.now();
+                            var interval = setInterval(myScan, 2000);
+                            // fetch for details of messages
+                            function myScan() {
 
-                                        if ((key[0] - currenttime <= 60000) && (key[0] - currenttime > 0) && (key[1] == userfloID)) {
-                                            console.log('Authorized message found');
-                                            showPage('auth_success')
-                                            setTimeout(() => {
-                                                document.getElementById('authorize_btn').click()
-                                            },2000)
-                                            //check message 
-                                            var cloudObj = a[Object.keys(a)[i]];
-                                            var cloudMessage = cloudObj.message.split('-');
-                                            if (cloudMessage[1]=='preentry'){
-                                                showMessege('', `Authorized for ${cloudMessage[1]}`);
+                                floCloudAPI.requestApplicationData({ type: "TestMod", application: "teega", receiverID: window.myFloID })
+                                    .then(function (value) {
 
+                                        //console.log(value);
+                                        var a = JSON.parse(value);
+                                        //console.log(a);
+                                        console.log('the length of a is ' + Object.keys(a).length);
+
+                                        for (var i = 0; i < Object.keys(a).length; i++) {
+                                            //console.log('scanning key');
+                                            //console.log(key);
+                                            var key = Object.keys(a)[i];
+                                            key = key.split('_');
+
+                                            if ((key[0] - currenttime <= 60000) && (key[0] - currenttime > 0) && (key[1] == userfloID)) {
+                                                console.log('Authorized message found');
+                                                document.getElementById('stop_admin_scanner').click();
+
+                                                //check message 
+                                                var cloudObj = a[Object.keys(a)[i]];
+                                                var cloudMessage = cloudObj.message.split('-');
+                                                if (cloudMessage[1] == 'preentry') {
+                                                    showMessege('', `Authorized for ${cloudMessage[1]}`);
+
+                                                }
+                                                else if (cloudMessage[1] == 'entry') {
+                                                    showMessege('', `Authorized for ${cloudMessage[1]}`);
+                                                }
+                                                else if (cloudMessage[1] == 'food') {
+                                                    showMessege('', `Authorized for ${cloudMessage[1]}`);
+                                                }
+
+
+                                                clearInterval(interval);
                                             }
-                                            else if (cloudMessage[1]=='entry'){
-                                                showMessege('', `Authorized for ${cloudMessage[1]}`);                                                
-                                            }
-                                            else if (cloudMessage[1]=='food'){
-                                                showMessege('', `Authorized for ${cloudMessage[1]}`);                                                
-                                            }
-                                            clearInterval(interval);
                                         }
-                                    }
 
-                                    // if more than 20 seconds have passed, stop
-                                    if (Date.now() - currenttime > 20000) {
-                                        console.log('scanning stopped');
-                                        stopScanning()
-                                        showMessege('error', 'Didnt authorize flo id');
-                                        clearInterval(interval);
-                                        setTimeout(() => {
-                                            document.getElementById('authorize_btn').click()
-                                        },2000)
-                                    }
-                                });
+                                        // if more than 20 seconds have passed, stop
+                                        if (Date.now() - currenttime > 20000) {
+                                            console.log('scanning stopped');
+                                            document.getElementById('stop_admin_scanner').click();
+                                            showMessege('', 'Didnt authorize flo id');
+                                            clearInterval(interval);
+
+                                        }
+                                    });
+                            }
+
                         }
-
                     }
-                    else if (result.text.length > 40) {
+                    else if (result.text.length > 40 && signinstatus) {
                         document.getElementById('qr_btn').click();
                     }
                     else {
-
                         //showMessege('Please enter valid input');                      
 
                     }
@@ -11136,17 +11019,21 @@
 
                         if (window.decodedQr.length > 40) {
                             codeReader.reset();
-                            hidePopup('qr_sign_in');
+                            document.getElementById('qr_sign_in').classList.add('hide-completely');
                         }
                         else {
 
                         }
                     })
 
-                    window.stopScanning = function(){
+                    document.getElementById('stop_admin_scanner').addEventListener('click', () => {
                         codeReader.reset();
-                        document.getElementById('scanner_line').classList.remove('scan')
-                    }
+                        document.getElementById('admin_scanner').classList.add('hide-completely');
+                        document.getElementById('main_page').classList.remove('hide-completely');
+
+                    })
+
+
                     document.getElementById('guest_btn').addEventListener('click', () => {
 
                         //const decodingStyle = document.getElementById('decoding-style').value;
@@ -11172,11 +11059,11 @@
                         codeReader.reset();
                         var currentidindex = videoInputDeviceIds.indexOf(selectedDeviceId);
 
-                        if (currentidindex == videoInputDeviceIds.length-1){
-                            selectedDeviceId = videoInputDeviceIds[0];                            
+                        if (currentidindex == videoInputDeviceIds.length - 1) {
+                            selectedDeviceId = videoInputDeviceIds[0];
                         }
-                        else{
-                            selectedDeviceId = videoInputDeviceIds[currentidindex+1];
+                        else {
+                            selectedDeviceId = videoInputDeviceIds[currentidindex + 1];
                         }
                         decodeContinuously(codeReader, selectedDeviceId, 'video');
 
@@ -11184,9 +11071,8 @@
 
                     document.getElementById('authorize_btn').addEventListener('click', () => {
                         // check if any of the venue is seleted
-                        let mainpage = document.getElementById('main_page'),
-                        checkeditem = '',
-                        scanLine = document.getElementById('scanner_line');
+                        let mainpage = document.getElementById('main_page');
+                        let checkeditem = '';
                         for (var i = 0; i < 3; i++) {
                             if (mainpage.children[i + 1].children[0].checked) {
                                 // find he name of what is checked
@@ -11198,13 +11084,16 @@
                             // Check if FLO ID is admin id or user id 
                             let idtype = document.getElementById('floidTypeText');
 
-                            if (idtype.textContent === 'admin') {
-                                decodeContinuously(codeReader, selectedDeviceId, 'video2')
-                                showPage('admin_scanner')
-                                scanLine.classList.add('scan')
+                            if (idtype.innerText == 'ADMIN') {
+                                decodeContinuously(codeReader, selectedDeviceId, 'video2');
+                                document.getElementById('admin_scanner').classList.remove('hide-completely');
+                                document.getElementById('main_page').classList.add('hide-completely');
                                 console.log(`Started decode from camera with id ${selectedDeviceId}`)
+                                //showMessege('Scanning for ' + checkeditem);
+
+
                             }
-                            else if (idtype.textContent === 'user') {
+                            else if (idtype.innerText == 'USER') {
                                 debugger;
                                 floCloudAPI.sendApplicationData(`Authorize-${checkeditem}-${myFloID}`, "TestMod", { application: "teega", receiverID: 'FK8jQufKXEsDwEgmF8vVJqHXfm2boAesj7' });
                                 showMessege('', 'Sent Authorization message to cloud');
@@ -11212,7 +11101,7 @@
 
                         }
                         else {
-                            showMessege('error', 'Please select a venue');
+                            showMessege('', 'Please select a venue');
                         }
 
 
@@ -11233,18 +11122,18 @@
                         codeReader.reset();
                         var currentidindex = videoInputDeviceIds.indexOf(selectedDeviceId);
 
-                        if (currentidindex == videoInputDeviceIds.length-1){
-                            selectedDeviceId = videoInputDeviceIds[0];                            
+                        if (currentidindex == videoInputDeviceIds.length - 1) {
+                            selectedDeviceId = videoInputDeviceIds[0];
                         }
-                        else{
-                            selectedDeviceId = videoInputDeviceIds[currentidindex+1];
+                        else {
+                            selectedDeviceId = videoInputDeviceIds[currentidindex + 1];
                         }
                         decodeContinuously(codeReader, selectedDeviceId, 'video2');
 
 
 
                     })
-                    
+
                     document.getElementById('back_to_main_page').addEventListener('click', () => {
                         codeReader.reset();
                     })
@@ -11494,15 +11383,12 @@
         window.onpopstate = (event) => showPage(event.state.page)
 
         function showPage(page) {
-            console.log(page)
             let thisPage = document.getElementById(page),
                 allPages = document.querySelectorAll('.page')
             allPages.forEach((pages) => {
                 pages.classList.add('hide-completely');
             });
             thisPage.classList.remove('hide-completely');
-            if(page !== 'admin_scanner')
-                stopScanning()
         }
         let lastState = '';
         document.getElementById('top_nav').addEventListener('click', (event) => {
@@ -11521,30 +11407,6 @@
                 lastState = appState.page;
             }
         });  
-        let countInternval;
-        function startCountdown(){
-            showPage('countdown')
-            let offset = 11.42,
-            countdown = 20
-            parent = document.getElementById('timer');
-            let countInternval = setInterval(() => {
-                parent.firstElementChild.style.strokeDashoffset = offset;
-                offset += 11.42;
-                parent.children[1].textContent = countdown;
-                countdown--;
-                if(countdown === -1)
-                    parent.firstElementChild.style.strokeDashoffset = 240;
-
-            }, 1000)
-            setTimeout(() => {
-                clearInterval(countInternval)
-            }, 21000)
-        }
-        function stopCountdown(){
-            console.log('hi')
-            clearInterval(countInternval)
-        }
-        
     </script>
 
 </body>
