@@ -10941,6 +10941,7 @@
 
         function messageScan(userfloID, venue) {
 
+
             var messageToVerify = `Authorize-${venue}`
             const taskNumber = {
                 preevent: 1, 
@@ -10950,22 +10951,22 @@
             const projectCode = "2020_project_1"
             const branch = "branch1"
 
+
             if( TEDxKanke.getAssignedInterns(projectCode, branch, taskNumber[venue])!=null && TEDxKanke.getAssignedInterns(projectCode, branch, taskNumber[venue]).includes(userfloID)){
+                debugger;
                 console.log(`${userfloID} is already authorized`);
                 showMessege('error', `${userfloID} is already authorized`);
-                document.getElementById('authorize_btn').click()
+                break;
             }
 
-            
 
-            // Now run a function for the next 60 seconds 
+            // Now run a function for the next 20 seconds 
             // Will execute myCallback every 5 seconds 
             var currenttime = Date.now();
-            var maxDelay = 60000 
-            document.getElementById('result').textContent = 'Waiting 20 seconds for user authorization';
+            var maxDelay = 20000 
             var interval = setInterval(myScan, 2000);
             stopScanning()
-            startCountdown()
+            startCountdown();
             // fetch for details of messages
             function myScan() {
 
@@ -10991,7 +10992,6 @@
                                 }).catch(error => console.log(error))
                                 showPage('auth_success')
                                 showMessege('', `${userfloID} Authorized for ${venue}`)
-                                document.getElementById('authorize_btn').click()
                                 break;
                             }
                         }
@@ -11013,7 +11013,6 @@
         function decodeOnce(codeReader, selectedDeviceId) {
             codeReader.decodeFromInputVideoDevice(selectedDeviceId, 'video').then((result) => {
                 console.log(result);
-                //debugger;
                 console.log('decoded value is ');
                 window.decodedQr = result.text;
 
@@ -11032,10 +11031,20 @@
                     console.log('decoded value is ' + result.text);
                     window.decodedQr = result.text;
                     debugger;
-                    if (result.text.length == 34 && result.text[0] == 'F' && venue!=null) {
+                    if (result.text.length == 34 && result.text[0] == 'F') {
                         var userfloID = result.text;
+
+                        let mainpage = document.getElementById('main_page'),
+                        checkeditem = '',
+                        scanLine = document.getElementById('scanner_line');
+                        for (var i = 0; i < 3; i++) {
+                            if (mainpage.children[i + 1].children[0].checked) {
+                                // find he name of what is checked
+                                checkeditem = mainpage.children[i + 1].children[2].dataset.value;
+                            }
+                        }
                         // fetch for details of messages
-                        messageScan(userfloID, venue)
+                        messageScan(userfloID, checkeditem)
                     }
                     else if (result.text.length > 40) {
                         document.getElementById('qr_btn').click();
@@ -11165,7 +11174,7 @@
                             let idtype = document.getElementById('floidTypeText');
 
                             if (idtype.textContent === 'admin') {
-                                decodeContinuously(codeReader, selectedDeviceId, 'video2', checkeditem)
+                                decodeContinuously(codeReader, selectedDeviceId, 'video2')
                                 showPage('admin_scanner')
                                 scanLine.classList.add('scan')
                                 console.log(`Started decode from camera with id ${selectedDeviceId}`)
