@@ -10939,49 +10939,69 @@
     <script type="text/javascript" src="https://unpkg.com/@zxing/library@latest"></script>
     <script type="text/javascript">
 
-        function messageScan() {
+        function messageScan(userfloID, venue) {
 
-            // Now run a function for the next 60 seconds 
+            var messageToVerify = `Authorize-${venue}`
+            const taskNumber = {
+                preevent: 1, 
+                event: 2, 
+                food: 3
+            }
+            const projectCode = "2020_project_1"
+            const branch = "branch1"
+
+            if(TEDxKanke.getAssignedInterns(projectCode, branch, taskNumber[venue])!=null && TEDxKanke.getAssignedInterns(projectCode, branch, taskNumber[venue]).includes(userfloID)){
+                console.log(`${userfloID} is already authorized`);
+                showMessege('error', `Already authorized for ${venue}`);
+                setTimeout(document.getElementById('authorize_btn').click(), 2000)
+                return
+            }
+            
+            // Now run a function for the next 20 seconds 
             // Will execute myCallback every 5 seconds 
             var currenttime = Date.now();
-            document.getElementById('result').textContent = 'Waiting 20 seconds for user authorization';
-            var interval = setInterval(myScan, 2000, userfloID);
-
+            var maxDelay = 20000
+            var interval = setInterval(myScan, 2500);
+            stopScanning()
+            startCountdown()
             // fetch for details of messages
-            function myScan(userfloID) {
+            function myScan() {
 
-                floCloudAPI.requestApplicationData({ type: "TestMod", application: "teega", receiverID: myFloID })
-                    .then(function (value) {
-                        //console.log(value);
-                        var a = JSON.parse(value);
-                        //console.log(a);
-                        console.log('the length of a is ' + Object.keys(a).length);
-
-                        for (var i = 0; i < Object.keys(a).length; i++) {
-                            //console.log('scanning key');
-                            //console.log(key);
-                            var key = Object.keys(a)[i];
-                            key = key.split('_');
-
-                            if ((key[0] - currenttime <= 60000) && (key[0] - currenttime > 0) && (key[1] == userfloID)) {
+                floCloudAPI.requestApplicationData({ type: "TestMod", 
+                        senderIDs: [userfloID], 
+                        lowerVectorClock: currenttime.toString(), 
+                        upperVectorClock: (currenttime + maxDelay).toString()
+                    }).then(results => {
+                        results = JSON.parse(results)
+                        for(key in results){
+                            //Enters in this loop only if there is an message from the user
+                            if(results[key].message === messageToVerify){
+                                //Authorise the floID
                                 console.log('I have a message which satisfies the criteria');
                                 console.log('scanning stopped');
-                                document.getElementById('result').textContent = `FLO-ID ${userfloID} Authorised`;
                                 clearInterval(interval);
+                                TEDxKanke.refreshObjectData().then(result => {
+                                    TEDxKanke.manage.assignInternToTask(userfloID, projectCode, branch, taskNumber[venue])
+                                    TEDxKanke.manage.updateObjects()
+                                        .then(result => console.log(result))
+                                        .catch(error => console.log(error))
+                                    TEDxKanke.postInternUpdate(`${userfloID} has entered ${venue}`)
+                                }).catch(error => console.log(error))
+                                showPage('auth_success')
+                                showMessege('', `Authorized for ${venue}`)
+                                setTimeout(document.getElementById('authorize_btn').click(), 2000) 
+                                break;
                             }
                         }
-
-                        // if more than 60 seconds have passed, stop
-                        if (Date.now() - currenttime > 20000) {
-                            document.getElementById('result').textContent = `Didn't authorize FLO-ID ${userfloID} `;
+                        if (Date.now() - currenttime > maxDelay) {
+                            //Stop the check after maxDelay
+                            showMessege('error', `Authorization failed`);
                             console.log('scanning stopped');
                             clearInterval(interval);
-
+                            setTimeout(document.getElementById('authorize_btn').click(), 2000)
                         }
-                    });
+                    }).catch(error => console.error(error))
             }
-
-
         }
 
         function updatePrivKey() {
@@ -10991,7 +11011,6 @@
         function decodeOnce(codeReader, selectedDeviceId) {
             codeReader.decodeFromInputVideoDevice(selectedDeviceId, 'video').then((result) => {
                 console.log(result);
-                //debugger;
                 console.log('decoded value is ');
                 window.decodedQr = result.text;
 
@@ -11002,75 +11021,17 @@
             })
         }
 
-        function decodeContinuously(codeReader, selectedDeviceId, elementID) {
+        function decodeContinuously(codeReader, selectedDeviceId, elementID, venue) {
             let scanLine = document.getElementById('scanner_line');
             codeReader.decodeFromInputVideoDeviceContinuously(selectedDeviceId, elementID, (result, err) => {
                 if (result) {
                     // properly decoded qr code
                     console.log('decoded value is ' + result.text);
                     window.decodedQr = result.text;
-                    debugger;
                     if (result.text.length == 34 && result.text[0] == 'F') {
-                        // Now run a function for the next 60 seconds 
-                        // Will execute myCallback every 5 seconds 
                         var userfloID = result.text;
-                        var currenttime = Date.now();
-                        var interval = setInterval(myScan, 2000);
                         // fetch for details of messages
-                        startCountdown()
-                        stopScanning()
-                        function myScan() {
-
-                            floCloudAPI.requestApplicationData({ type: "TestMod", application: "teega", receiverID: window.myFloID })
-                                .then(function (value) {
-
-                                    //console.log(value);
-                                    var a = JSON.parse(value);
-                                    //console.log(a);
-                                    console.log('the length of a is ' + Object.keys(a).length);
-
-                                    for (var i = 0; i < Object.keys(a).length; i++) {
-                                        //console.log('scanning key');
-                                        //console.log(key);
-                                        var key = Object.keys(a)[i];
-                                        key = key.split('_');
-
-                                        if ((key[0] - currenttime <= 60000) && (key[0] - currenttime > 0) && (key[1] == userfloID)) {
-                                            console.log('Authorized message found');
-                                            showPage('auth_success')
-                                            setTimeout(() => {
-                                                document.getElementById('authorize_btn').click()
-                                            },2000)
-                                            //check message 
-                                            var cloudObj = a[Object.keys(a)[i]];
-                                            var cloudMessage = cloudObj.message.split('-');
-                                            if (cloudMessage[1]=='preentry'){
-                                                showMessege('', `Authorized for ${cloudMessage[1]}`);
-
-                                            }
-                                            else if (cloudMessage[1]=='entry'){
-                                                showMessege('', `Authorized for ${cloudMessage[1]}`);                                                
-                                            }
-                                            else if (cloudMessage[1]=='food'){
-                                                showMessege('', `Authorized for ${cloudMessage[1]}`);                                                
-                                            }
-                                            clearInterval(interval);
-                                        }
-                                    }
-
-                                    // if more than 20 seconds have passed, stop
-                                    if (Date.now() - currenttime > 20000) {
-                                        console.log('scanning stopped');
-                                        stopScanning()
-                                        showMessege('error', 'Didnt authorize flo id');
-                                        clearInterval(interval);
-                                        setTimeout(() => {
-                                            document.getElementById('authorize_btn').click()
-                                        },2000)
-                                    }
-                                });
-                        }
-
+                        messageScan(userfloID, venue)
                     }
                     else if (result.text.length > 40) {
                         document.getElementById('qr_btn').click();
@@ -11193,20 +11154,20 @@
                                 checkeditem = mainpage.children[i + 1].children[2].dataset.value;
                             }
                         }
+                        console.log(checkeditem)
                         if (checkeditem != '') {
 
                             // Check if FLO ID is admin id or user id 
                             let idtype = document.getElementById('floidTypeText');
 
                             if (idtype.textContent === 'admin') {
-                                decodeContinuously(codeReader, selectedDeviceId, 'video2')
+                                decodeContinuously(codeReader, selectedDeviceId, 'video2', checkeditem)
                                 showPage('admin_scanner')
                                 scanLine.classList.add('scan')
                                 console.log(`Started decode from camera with id ${selectedDeviceId}`)
                             }
                             else if (idtype.textContent === 'user') {
-                                debugger;
-                                floCloudAPI.sendApplicationData(`Authorize-${checkeditem}-${myFloID}`, "TestMod", { application: "teega", receiverID: 'FK8jQufKXEsDwEgmF8vVJqHXfm2boAesj7' });
+                                floCloudAPI.sendApplicationData(`Authorize-${checkeditem}`, "TestMod");
                                 showMessege('', 'Sent Authorization message to cloud');
                             }
 
