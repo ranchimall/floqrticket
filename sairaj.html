@@ -10949,15 +10949,12 @@
             }
             const projectCode = "2020_project_1"
             const branch = "branch1"
-            debugger;
 
-            if( TEDxKanke.getAssignedInterns(projectCode, branch, taskNumber[venue])!=null && TEDxKanke.getAssignedInterns(projectCode, branch, taskNumber[venue]).includes(userfloID)){
+            if(TEDxKanke.getAssignedInterns(projectCode, branch, taskNumber[venue])!=null && TEDxKanke.getAssignedInterns(projectCode, branch, taskNumber[venue]).includes(userfloID)){
                 console.log(`${userfloID} is already authorized`);
                 showMessege('error', `${userfloID} is already authorized`);
-                document.getElementById('back_button_admin').click();
+                document.getElementById('authorize_btn').click()
             }
-
-            
 
             // Now run a function for the next 60 seconds 
             // Will execute myCallback every 5 seconds 
@@ -10965,7 +10962,6 @@
             var maxDelay = 60000 
             document.getElementById('result').textContent = 'Waiting 20 seconds for user authorization';
             var interval = setInterval(myScan, 2000);
-            stopScanning()
             startCountdown()
             // fetch for details of messages
             function myScan() {
@@ -11014,6 +11010,7 @@
         function decodeOnce(codeReader, selectedDeviceId) {
             codeReader.decodeFromInputVideoDevice(selectedDeviceId, 'video').then((result) => {
                 console.log(result);
+                //debugger;
                 console.log('decoded value is ');
                 window.decodedQr = result.text;
 
@@ -11031,9 +11028,11 @@
                     // properly decoded qr code
                     console.log('decoded value is ' + result.text);
                     window.decodedQr = result.text;
-                    if (result.text.length == 34 && result.text[0] == 'F' && venue!=null) {
+                    debugger;
+                    if (result.text.length == 34 && result.text[0] == 'F') {
                         var userfloID = result.text;
                         // fetch for details of messages
+                        stopScanning()
                         messageScan(userfloID, venue)
                     }
                     else if (result.text.length > 40) {
