@@ -10782,7 +10782,7 @@
     <!--admin option to scan QR code-->
     <section id="admin_scanner" class="fade-in page qr-scanner hide-completely container-card">
         <header class="container-header">
-            <svg class="back-arrow" onclick="history.back()" viewBox="0 0 31.24 56.83">
+            <svg class="back-arrow" onclick="" viewBox="0 0 31.24 56.83" id='back_button_admin'>
                 <title>Go back</title>
                 <polyline points="29.83,1.41 2.83,28.41 29.83,55.41 " />
             </svg>
@@ -11248,6 +11248,12 @@
                     document.getElementById('back_to_main_page').addEventListener('click', () => {
                         codeReader.reset();
                     })
+
+                    document.getElementById('back_button_admin').addEventListener('click', () => {
+                        codeReader.reset();
+                        document.getElementById('admin_scanner').classList.add('hide-completely');
+                        document.getElementById('main_page').classList.remove('hide-completely');
+                    })
                 })
                 .catch((err) => {
                     console.error(err)
@@ -11396,6 +11402,7 @@
                     signIn.children[2].classList.remove('hide-completely')
                     btn.classList.add('hide-completely')
                 }
+
                 privField.addEventListener('keyup', (event) => {
                     if (privField.value.trim() !== '')
                         enableBtn('sign_in_btn')
